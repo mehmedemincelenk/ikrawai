@@ -1,0 +1,55 @@
+name: Deploy static content to Pages
+
+on:
+  # Her push'ta çalışması için main veya master branch'ini dinliyoruz
+  push:
+    branches: ['main', 'master']
+
+  # GitHub Actions sekmesinden manuel olarak tetiklemeye izin verir
+  workflow_dispatch:
+
+# GITHUB_TOKEN izinlerini ayarlıyoruz
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Eşzamanlı deploy işlemlerini yönetmek için
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Vite projeleri varsayılan olarak "dist" klasörüne derler
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
