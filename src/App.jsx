@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CONFIG } from './config';
-import { Search, FileText, Upload, BookOpen, Loader2, Book, Key, X, Library, Download, CheckSquare } from 'lucide-react';
+import { Search, FileText, Upload, BookOpen, Loader2, Book, Key, X, Library, Download, CheckSquare, Menu } from 'lucide-react';
 import localforage from 'localforage';
 import * as pdfjsLib from 'pdfjs-dist';
 import ePub from 'epubjs';
@@ -20,6 +20,7 @@ export default function App() {
   const [isGeneratedBook, setIsGeneratedBook] = useState(false);
   const [generatedBookTitle, setGeneratedBookTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [isLoadingUpload, setIsLoadingUpload] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -394,11 +395,24 @@ ${xmlContext}`;
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-900 font-sans">
-      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col py-6 px-4 shadow-sm z-20 relative">
-        <h1 className="text-2xl font-bold text-indigo-600 mb-8 flex items-center justify-center gap-2">
-          <BookOpen className="w-6 h-6" /> {CONFIG.APP_NAME}
-        </h1>
+    <div className="flex h-screen bg-slate-50 text-slate-900 font-sans overflow-hidden">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 z-30 md:hidden backdrop-blur-sm" 
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed inset-y-0 left-0 w-72 bg-white border-r border-slate-200 flex flex-col py-6 px-4 shadow-lg z-40 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 shrink-0`}>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-xl md:text-2xl font-bold text-indigo-600 flex items-center justify-center gap-2 w-full">
+            <BookOpen className="w-5 h-5 md:w-6 md:h-6" /> {CONFIG.APP_NAME}
+          </h1>
+          <button className="md:hidden text-slate-400 hover:text-slate-600 transition absolute right-4" onClick={() => setIsSidebarOpen(false)}>
+            <X className="w-6 h-6" />
+          </button>
+        </div>
         
         <input 
           type="file" 
@@ -466,46 +480,52 @@ ${xmlContext}`;
           </div>
         )}
 
-        <header className="h-24 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center px-8 shadow-sm justify-between shrink-0">
-          <form onSubmit={handleSearch} className="relative w-full max-w-2xl flex items-center">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder={CONFIG.UI.searchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-slate-100 border border-slate-200 rounded-full text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:bg-white transition shadow-inner font-medium"
-            />
-            <button type="submit" className="hidden">Ara</button>
-          </form>
+        <header className="py-4 md:h-24 bg-white/90 backdrop-blur-md border-b border-slate-200 flex flex-col md:flex-row items-center px-4 md:px-8 shadow-sm justify-between shrink-0 gap-4">
+          <div className="flex w-full md:w-auto flex-1 items-center gap-3">
+            <button onClick={() => setIsSidebarOpen(true)} className="md:hidden p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg transition shrink-0">
+              <Menu className="w-6 h-6" />
+            </button>
+
+            <form onSubmit={handleSearch} className="relative w-full max-w-2xl flex items-center">
+              <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder={CONFIG.UI.searchPlaceholder}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 md:pl-12 pr-4 py-2 md:py-3 bg-slate-100 border border-slate-200 rounded-full text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:bg-white transition shadow-inner font-medium"
+              />
+              <button type="submit" className="hidden">Ara</button>
+            </form>
+          </div>
           
-          <div className="flex items-center gap-3 ml-6">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
             <button 
               onClick={handleGenerateArticle}
-              className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-full hover:bg-indigo-700 hover:shadow-lg transition-all shadow-md font-semibold whitespace-nowrap"
+              className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-indigo-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-full hover:bg-indigo-700 hover:shadow-lg transition-all shadow-md text-sm md:text-base font-semibold whitespace-nowrap"
             >
               {selectedChunks.length > 0 ? (
                 <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs font-bold mr-1">{selectedChunks.length}</span>
               ) : (
-                <FileText className="w-5 h-5" />
+                <FileText className="w-4 h-4 md:w-5 md:h-5" />
               )}
               {CONFIG.UI.generateArticleBtn}
             </button>
             <button 
               onClick={handleGenerateBook}
-              className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-full hover:bg-emerald-700 hover:shadow-lg transition-all shadow-md font-semibold whitespace-nowrap"
+              className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-emerald-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-full hover:bg-emerald-700 hover:shadow-lg transition-all shadow-md text-sm md:text-base font-semibold whitespace-nowrap"
             >
               {selectedChunks.length > 0 ? (
                 <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs font-bold mr-1">{selectedChunks.length}</span>
               ) : (
-                <Library className="w-5 h-5" />
+                <Library className="w-4 h-4 md:w-5 md:h-5" />
               )}
               {CONFIG.UI.generateBookBtn}
             </button>
           </div>
         </header>
 
-        <section className="flex-1 overflow-y-auto p-8 relative bg-slate-50/50">
+        <section className="flex-1 overflow-y-auto p-4 md:p-8 relative bg-slate-50/50">
             {results.length === 0 && !isSearching ? (
               <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 opacity-60">
                 <BookOpen className="w-20 h-20 mb-6 text-slate-300 drop-shadow-sm" />
@@ -529,10 +549,10 @@ ${xmlContext}`;
                     return (
                       <div 
                         key={idx} 
-                        className={`relative bg-white p-6 rounded-xl shadow-sm border transition hover:shadow-md ${isSelected ? 'border-indigo-400 ring-1 ring-indigo-400' : 'border-slate-200'}`}
+                        className={`relative bg-white p-4 md:p-6 rounded-xl shadow-sm border transition hover:shadow-md ${isSelected ? 'border-indigo-400 ring-1 ring-indigo-400' : 'border-slate-200'}`}
                       >
-                        <div className="absolute top-6 right-6 flex items-center gap-2 cursor-pointer" onClick={() => toggleChunkSelection(result)}>
-                          <span className={`text-xs font-semibold uppercase tracking-wider ${isSelected ? 'text-indigo-600' : 'text-slate-400'}`}>
+                        <div className="absolute top-4 md:top-6 right-4 md:right-6 flex items-center gap-2 cursor-pointer" onClick={() => toggleChunkSelection(result)}>
+                          <span className={`hidden sm:inline text-xs font-semibold uppercase tracking-wider ${isSelected ? 'text-indigo-600' : 'text-slate-400'}`}>
                             {isSelected ? 'Seçildi' : 'Seç'}
                           </span>
                           <input 
@@ -542,16 +562,16 @@ ${xmlContext}`;
                             className="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer pointer-events-none"
                           />
                         </div>
-                        <div className="flex items-center gap-3 mb-4 text-sm text-slate-500 font-medium pr-28">
-                          <span className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
-                            <Book className="w-4 h-4" />
-                            {result.bookTitle}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4 text-xs sm:text-sm text-slate-500 font-medium pr-10 sm:pr-28">
+                          <span className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100 self-start">
+                            <Book className="w-4 h-4 shrink-0" />
+                            <span className="truncate max-w-[200px] md:max-w-none">{result.bookTitle}</span>
                           </span>
-                          <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">
+                          <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200 self-start">
                             {result.location}
                           </span>
                         </div>
-                        <p className="text-slate-700 leading-relaxed text-justify relative z-10" onClick={(e) => {
+                        <p className="text-sm md:text-base text-slate-700 leading-relaxed text-justify relative z-10" onClick={(e) => {
                           e.stopPropagation();
                           toggleChunkSelection(result);
                         }} style={{ cursor: "pointer" }}>
