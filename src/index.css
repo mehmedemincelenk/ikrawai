@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  background-color: #f8fafc; /* Tailwind slate-50 */
+  color: #0f172a; /* Tailwind slate-900 */
+}
