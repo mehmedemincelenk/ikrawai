@@ -23,3 +23,6 @@ An autonomous publishing engine that synthesizes complex, interdisciplinary text
 * **System Orchestration:** Moving beyond manual syntax to high-level architectural design via **Vibe Coding**.
 * **Agentic Workflows:** Designing specialized AI personas to handle complex, multi-stage cognitive tasks.
 * **Knowledge Synthesis:** Automating the ETL (Extract, Transform, Load) process for intellectual content.
+
+![livehow](https://github.com/user-attachments/assets/6d061a7e-e878-4885-b03d-a5c852914d6c)
+
