@@ -1,4 +1,4 @@
-# 📚 IKRAWAI: AI-Powered Multi-Agent Books Synthesis Engine
+# 📚 IKRAWAI: AI-Powered Multi-Agent Books Synthesis Engine | LIVE: mehmedemincelenk.github.io/ikrawai/
 ![livehow](https://github.com/user-attachments/assets/88723ebe-5760-474c-9990-04e39de39b21)
 
 An autonomous publishing engine that synthesizes complex, interdisciplinary texts into high-quality books and articles using a multi-agent orchestration.
