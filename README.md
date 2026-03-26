@@ -1,7 +1,7 @@
 # 📚 IKRAWAI: AI-Powered Multi-Agent Books Synthesis Engine
 ![livehow](https://github.com/user-attachments/assets/88723ebe-5760-474c-9990-04e39de39b21)
 
-An autonomous publishing engine that synthesizes complex, interdisciplinary texts into high-quality books and articles using a multi-agent orchestration. | LIVE: mehmedemincelenk.github.io/ikrawai/
+An autonomous publishing engine that synthesizes complex, interdisciplinary texts into high-quality books and articles using a multi-agent orchestration. | LIVE: https://mehmedemincelenk.github.io/ikrawai/
 
 ## 🚀 Problem & Solution
 * **Problem:** The high cost and complexity of synthesizing interdisciplinary knowledge. Traditional publishing—requiring months of academic research, writing, and high budgets—creates a barrier for rapid knowledge production.
